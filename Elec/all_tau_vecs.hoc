@@ -1,0 +1,45 @@
+//**************************************************************************
+// All_Tau_Vecs loads the tables used to define the taus for channels
+
+
+objref taum_
+objref tauh_
+objref vtau_
+objref file_
+
+file_ = new File ()
+
+taum_ = new Vector(16,0)
+tauh_ = new Vector(16,0)
+vtau_ = new Vector(16,0)
+
+
+//*************************
+
+
+
+
+objref taum_kir_
+objref vtau_kir_
+objref file_kir_
+
+file_kir_ = new File ()
+
+taum_kir_ = new Vector(16,0)
+vtau_kir_ = new Vector(16,0)
+
+
+file_kir_.ropen ("tau_tables/taum_kir.txt")
+taum_kir_.scanf(file_kir_)
+file_kir_.close()
+
+file_kir_.ropen ("tau_tables/taum_kir.txt")
+vtau_kir_.scanf(file_kir_)
+file_kir_.close()
+
+table_taumkir_kir(taum_kir_,vtau_kir_)
+
+
+
+//*************************
+

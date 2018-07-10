@@ -1,0 +1,162 @@
+/************************************************************
+
+    2/16/17:  this is the most current file for electrotonic
+    analyses of the MSN neurons.
+
+	Christina Weaver
+	August 2011
+	
+	insert channels from Vetter et al (2001) into Jennie's 
+	PFC and Visual Cortex neurons.  Includes Mainen's 
+	synthetic axon (from the 1995 Mainen et al. paper).
+
+************************************************************/
+
+load_file("nrngui.hoc")
+
+// now load morph;  recall that 'basic_shape()' resets the morphology
+strdef MSNname, mBase
+
+//MSNname = "WTD1/Apr12IR2a.hoc"
+//mBase="Apr12IR2a"
+//MSNname = "WTD1/May9IR3b.hoc"
+//mBase="May9IR3b"
+//MSNname = "WTD1/Apr29IR2b.hoc"
+//mBase = "Apr29IR2b"
+//MSNname = "WTD1/Apr29IR2a.hoc"
+//mBase = "Apr29IR2a"
+//MSNname = "WTD1/Nov3IR3a.hoc"
+//mBase="Nov3IR3a"
+//MSNname = "WTD1/Nov9IR3c.hoc"
+//mBase = "Nov9IR3c"
+//MSNname = "WTD2/Apr26IR3h.hoc"
+//mBase = "Apr26IR3h"
+//MSNname = "WTD2/Apr29IR3a.hoc"
+//mBase = "Apr29IR3a"
+//MSNname = "WTD2/Nov9IR3b.hoc"
+//mBase = "Nov9IR3b"
+//MSNname = "WTD2/Apr12IR1b.hoc"
+//mBase = "Apr12IR1b"
+//MSNname = "Q175D1/Apr25IR2a.hoc"
+//mBase = "Apr25IR2a"
+//MSNname = "Q175D1/May4IR2e.hoc"
+//mBase = "May4IR2e"
+//MSNname = "Q175D1/Apr27IR3h.hoc"
+//mBase = "Apr27IR3h"
+//MSNname = "Q175D1/Apr13IR2c.hoc"
+//mBase = "Apr13IR2c"
+//MSNname = "Q175D1/Apr13IR3b.hoc"
+//mBase = "Apr13IR3b"
+//MSNname = "Q175D1/Apr15IR2c.hoc"
+//mBase = "Apr15IR2c"
+//MSNname = "Q175D1/Apr25IR2c.hoc"
+//mBase = "Apr25IR2c"
+//MSNname = "Q175D1/May4IR2f.hoc"
+//mBase = "May4IR2f"
+//MSNname = "Q175D1/Nov4IR3f.hoc"
+//mBase = "Nov4IR3f"
+//MSNname = "Q175D2/Apr25IR2b.hoc"
+//mBase = "Apr25IR2b"
+//MSNname = "Q175D2/Apr27IR2d.hoc"
+//mBase = "Apr27IR2d"
+//MSNname = "Q175D2/May4IR2a.hoc"
+//mBase = "May4IR2a"
+//MSNname = "Q175D2/May6IR2e.hoc"
+//mBase = "May6IR2e"
+//MSNname = "Q175D2/May2IR3e.hoc"
+//mBase = "May2IR3e"
+//MSNname = "Q175D2/Apr13IR2b.hoc"
+//mBase = "Apr13IR2b"
+//MSNname = "Q175D2/Apr15IR2h.hoc"
+//mBase = "Apr15IR2h"
+//MSNname = "Q175D2/Apr20IR2c.hoc"
+//mBase = "Apr20IR2c"
+MSNname = "Q175D2/Apr27IR3i.hoc"
+mBase = "Apr27IR3i"
+load_file(MSNname)
+
+
+objref dendritic, apical
+    dendritic = new SectionList()    
+    forsec "dend"  {
+        dendritic.append()
+    }
+    apical = new SectionList()
+
+
+// WTD1: spine length: 1.746363, diam: 0.394444
+// WTD2: spine length: 1.386666, diam: 0.348889
+// HETD1: spine length: 1.388032, diam: 0.375556
+// HETD2: spine length: 1.477597, diam: 0.358333
+
+
+xopen("baseline_values.txt")
+xopen("all_tau_vecs.hoc")
+xopen("basic_procs.hoc")
+xopen("load_scripts.hoc")
+
+load_file("aux_procs.hoc")
+
+HALF_diam = soma.diam/2
+HALF_L = soma.L/2
+//xopen("electro_procs.hoc")
+set_pas(G_PAS)
+//set_kir(G_KIR)
+
+MSN_prox_SpineDensity = 1.4216	
+MSN_med_SpineDensity  = 1.389	
+MSN_dist_SpineDensity = 1.1429
+
+//WTD1 density: 1.4216, 1.389, 1.1429
+//WTD2 density: 1.208, 1.2623, 1.4997
+//HETD1 density: 1.1979, 1.2772, 1.1314
+//HETD2 density: 1.4954, 1.5213, 1.3981
+
+//applySubtreeConstantSpineDensity(apical, SurfaceAreaOneApicalSpine, PFC_effective_ApicalSpineDensity)
+//applySubtreeConstantSpineDensity(basal,  SurfaceAreaOneBasalSpine,  PFC_effective_BasalSpineDensity)
+
+ApicalHeadDiam = 0.394444
+ApicalHeadLen = 1.746363
+
+//WTD2: 1.386666, 0.348889
+//HETD1: 1.388032, 0.375556
+//HETD2: 1.477597, 0.358333
+SurfaceAreaOneApicalSpine = (ApicalHeadDiam * PI * ApicalHeadLen)
+
+
+soma printf("%s {L = %g  diam = %g}\n",secname(), L, diam)
+//print "adding spines - proximal"
+
+
+//proximal.printnames()
+//applySubtreeConstantSpineDensity(proximal, SurfaceAreaOneApicalSpine, MSN_prox_SpineDensity)
+
+//print "done with proximal."
+//applySubtreeConstantSpineDensity(middend, SurfaceAreaOneApicalSpine, MSN_med_SpineDensity)
+//applySubtreeConstantSpineDensity(distal, SurfaceAreaOneApicalSpine, MSN_dist_SpineDensity)
+geom_nseg(500,0.1)
+
+
+xopen("MSN_fixDiams.hoc")
+
+
+  xopen("measureMeanAtten.hoc")
+  soma {
+    nseg = 1
+    soma_ref=new SectionRef()
+  }
+
+soma { distance() }
+somaAvgL = 0.5*(L+diam)
+
+
+//{printf("File:  %s\n",MSNname)}
+{printf("%s_out = [",MSNname)}
+{printf("\nOutward Atten, dendritic\n")}
+  meanOutwardAttenuationAllFrequencies(soma_ref,dendritic)
+{printf("];\n\n%s_in = [",MSNname)}
+{printf("\n\nInward Atten, dendritic\n")}
+  meanInwardAttenuationAllFrequencies(soma_ref,dendritic)
+{printf("];\n")}
+
+

@@ -1,0 +1,23 @@
+//****************************************************************************
+// basic_procs.hoc defines procedures for setting conductances and range
+// variables of channels - these are primarily used to change variables
+// from the gui
+
+proc set_pas() {NEW_GPAS = $1
+    forall if (ismembrane("pas")) {
+        Ra      = RA
+        Cm      = CM
+        g_pas   = G_PAS
+        e_pas   = E_PAS
+    }
+
+}
+
+proc set_kir() {		NEW_GBAR = $1
+	nG_KIR = NEW_GBAR
+	forall if (ismembrane("kir")) {gkbar_kir = G_KIR
+	qfact_kir = 0.2
+	mshift_kir = 119.565254
+	mslope_kir = 13.7042426
+	}
+}

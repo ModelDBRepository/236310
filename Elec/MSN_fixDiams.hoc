@@ -1,0 +1,52 @@
+objref diamV
+
+//xopen("../plot_morph_info.hoc")
+
+proc MSN_fixDiams() { local i, xstp, xoff, xprev, xend
+
+//    print "Adjusting dendrite diameters"
+    
+    // first, correct any really narrow dendrites
+    forall { if( diam < 0.5 ) diam = 0.5 }
+
+    // now use a 3-pt avg to smooth all dendrites with nseg>0
+    forsec "dend" {
+        if( nseg > 3 ) {
+//	    printf("\n\nSection %s, nseg %d\n",secname(),nseg)
+	    xstp = 1/nseg
+	    xoff = xstp/2
+	    // print output to check this.
+	    diamV = new Vector(nseg+2)
+
+	    // forward difference
+//	    printf("start:  diamV.x[0] = (diam(0)+diam(%g)+diam(%g)) / 3\n",xstp-xoff,2*xstp-xoff)
+	    diamV.x[0] = (diam(0)+diam(xstp-xoff)+diam(2*xstp-xoff)) / 3
+
+	    for i = 1, nseg {
+
+	        if( i== 1 ) { xprev = 0 } else { xprev = xstp*(i-1)-xoff }
+	        if( i== nseg ) { xend = 1 } else { xend = xstp*(i+1)-xoff }
+	        //printf("Average diamV.x[%d] = ( diam(%g) + diam(%g) + diam(%g) ) / 3\n",i,xprev,xstp*i-xoff,xend)
+	    
+	        diamV.x[i] = ( diam(xprev) + diam(xstp*i-xoff) + diam(xend) ) / 3
+	    }
+	    // backward difference
+//	    printf("end:  diamV.x[%d] = (diam(1)+diam(%g)+diam(%g)) / 3\n",nseg+1,1-xoff,1-xoff-xstp)
+	    diamV.x[nseg+1] = (diam(1)+diam(1-xoff)+diam(1-xoff-xstp)) / 3
+
+//	    printf("\n\nAdjusting diameter in section %s, nseg %d\n",secname(),nseg)
+//	    for(x) { printf("\t(%g, %g)",x,diam(x)) }
+//	    printf("\n")
+//	    for i=0, nseg+1 { printf("\t(%g, %g)",i*xstp-xoff,diamV.x[i]) }
+//	    printf("----done %s\n",secname())
+	    i=0
+	    for(x) {
+	        diam(x) = diamV.x[i]
+		i = i+1
+	    }
+	}
+    }
+	    
+}
+
+MSN_fixDiams()

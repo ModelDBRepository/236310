@@ -1,0 +1,8 @@
+objref ps
+ps=new PlotShape()
+
+skinnyD=new SectionList()
+dend[7] { skinnyD.append() }
+//dend[20] { skinnyD.append() }
+//dend[36] { skinnyD.append() }
+ps.color_list(skinnyD,2)

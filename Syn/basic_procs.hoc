@@ -1,0 +1,224 @@
+//****************************************************************************
+// basic_procs.hoc defines procedures for setting conductances and range
+// variables of channels - these are primarily used to change variables
+// from the gui
+
+proc set_pas() {NEW_GPAS = $1
+    forall if (ismembrane("pas")) {
+        Ra      = RA
+        Cm      = CM
+        g_pas   = 0.0001437349
+        e_pas   = -79.2586192087
+    }
+    forsec "axon_myelin" { cm = CM * CM_MYELINFAC }
+}
+
+proc set_naf() {		NEW_GBAR = $1
+	nG_NAF = NEW_GBAR
+	forall if (ismembrane("naf")) {gnabar_naf = G_NAF_AIS}
+	forsec "soma" {gnabar_naf = nG_NAF}
+	forsec proximal {gnabar_naf = nG_NAF*0.273/9}
+	forsec middend {gnabar_naf = nG_NAF*0.273/9}
+	forsec distal {gnabar_naf = nG_NAF*0.0975/9}
+	
+}
+
+proc set_nap() {		NEW_GBAR = $1
+	nG_NAP = NEW_GBAR
+	forsec "soma" {gnabar_nap = nG_NAP}
+	forsec "dend" {gnabar_nap = nG_NAP*0.013802/4}
+}
+
+proc set_shifts() {
+	forall if (ismembrane("naf")) {
+		mshift_naf = mshift_na
+		hshift_naf = hshift_na
+	}
+	forall if (ismembrane("nap")) {
+		mshift_nap = mshift_na
+		hshift_nap = hshift_na
+	}
+	forall if (ismembrane("kas")) {
+		mshift_kas = mshift_ka
+		hshift_kas = hshift_ka
+		htaushift_kas = HTAUSHIFT_KAS - mshift_ka
+	}
+	forall if (ismembrane("kaf")) {
+		mshift_kaf = mshift_ka
+		hshift_kaf = hshift_ka
+	}
+	forall if (ismembrane("kdr")) {
+		ashift_kdr = ashift_k
+		bshift_kdr = bshift_k
+	}
+	forall if (ismembrane("naf")) {
+		mshift_naf = mshift_na
+		hshift_naf = hshift_na
+	}
+	forall if (ismembrane("bkkca")) {
+		m1half_bkkca = M1HALF_BK - mshift_ka
+	    m2half_bkkca = M2HALF_BK - mshift_ka
+	    m3half_bkkca = M3HALF_BK - mshift_ka
+	    m4half_bkkca = M4HALF_BK - mshift_ka
+	}
+	forall if (ismembrane("caL")) {
+		mshift_caL = mshift_ca
+	    hshift_caL = hshift_ca
+	    mshift_caL13 = mshift_ca
+	    hshift_caL13 = hshift_ca
+	    mshift_can = mshift_ca
+	    hshift_can = hshift_ca
+	    mshift_car = mshift_ca
+	    hshift_car = hshift_ca
+	    mshift_cat = mshift_ca
+	    hshift_cat = hshift_ca
+	}
+}
+
+/************************************************
+proc set_nafa() {		NEW_GBAR = $1
+	nG_NAF_AIS = NEW_GBAR
+	forsec "axon[0]" {gnabar_naf = nG_NAF_AIS 
+		mslope_naf = SOMA_MSLOPE_NAF * AXON_MSLOPEFAC
+        mshift_naf = mshift_na - AXON_MSHIFT
+        hshift_naf = hshift_na - AXON_HSHIFT}
+    forsec "axon[1]" {gnabar_naf = nG_NAF_AIS 
+		mslope_naf = SOMA_MSLOPE_NAF * AXON_MSLOPEFAC
+        mshift_naf = mshift_na - AXON_MSHIFT
+        hshift_naf = hshift_na - AXON_HSHIFT}
+    
+}
+
+proc set_napa() {		NEW_GBAR = $1
+	nG_NAP_AIS = NEW_GBAR
+	forsec "axon[0]" {gnabar_nap = 4e-05}
+	forsec "axon[1]" {gnabar_nap = 4e-05}
+}
+
+proc set_kafa() {		NEW_GBAR = $1
+	nG_KAF_AIS = NEW_GBAR
+	forsec "axon[0]" {gkbar_kaf = nG_KAF_AIS mshift_kaf = 0}
+	forsec "axon[1]" {gkbar_kaf = nG_KAF_AIS hshift_kaf = 0}
+}
+
+proc set_kasa() {		NEW_GBAR = $1
+	nG_KAS_AIS = NEW_GBAR
+	forsec "axon[0]" {gkbar_kas = nG_KAS_AIS}
+	forsec "axon[1]" {gkbar_kas = nG_KAS_AIS}
+}
+
+proc set_kdra() {		NEW_GBAR = $1
+	nG_KDR_AIS = NEW_GBAR
+	forsec "axon[0]" {gkbar_kdr = nG_KDR_AIS}
+	forsec "axon[1]" {gkbar_kdr = nG_KDR_AIS}
+}
+
+***********************************************/
+
+proc set_ek() {	newEK = $1
+	forsec "MSP" {ek = newEK}
+	EK = newEK
+}
+
+proc set_kir() {		NEW_GBAR = $1
+	nG_KIR = NEW_GBAR
+	forall if (ismembrane("kir")) {gkbar_kir = G_KIR
+	qfact_kir = 0.36 
+	mshift_kir = 105.8433503124
+	mslope_kir = 14.9975692214
+	}
+}
+
+proc set_kas() {		NEW_GBAR = $1
+	nG_KAS = NEW_GBAR
+	forsec "soma" {gkbar_kas = nG_KAS}
+	forsec middend {gkbar_kas = nG_KAS*0.3893/3.601}
+	forsec distal {gkbar_kas = nG_KAS*0.3893/3.601}
+}
+
+proc set_kaf() {		NEW_GBAR = $1
+	nG_KAF = NEW_GBAR
+	forsec "soma" {gkbar_kaf = nG_KAF}
+	
+	forsec proximal {gkbar_kaf = nG_KAF}
+	
+	forsec middend {gkbar_kaf = nG_KAF*0.016821/0.076524}
+	
+
+	
+	forsec distal {gkbar_kaf = nG_KAF*0.011214/0.076524}
+
+}
+
+proc set_kdr() {		NEW_GBAR = $1
+	nG_KDR = NEW_GBAR
+	forsec "soma" {gkbar_kdr = nG_KDR}
+	forsec "dend"  {gkbar_kdr = nG_KDR}
+}
+
+proc set_bkkca() {		NEW_GBAR = $1
+	nG_BKKCA = NEW_GBAR
+	forall if(ismembrane("bkkca")) {gkbar_bkkca = NEW_GBAR}
+}
+
+proc set_skkca() {		NEW_GBAR = $1
+	nG_SKKCA = NEW_GBAR
+	forall if(ismembrane("skkca")) {gkbar_skkca = NEW_GBAR}
+}
+
+
+proc set_caL() {		NEW_PBAR = $1
+	nP_CAL = NEW_PBAR
+	forall if (ismembrane("caL")) {pbar_caL = NEW_PBAR}
+}
+
+proc set_caL13() {		NEW_PBAR = $1
+	nP_CAL13 = NEW_PBAR
+	forall if (ismembrane("caL13")) {pcaLbar_caL13 = NEW_PBAR}
+}
+
+proc set_can() {		NEW_PBAR = $1
+	nP_CAN = NEW_PBAR
+	forall if (ismembrane("can")) {pbar_can = NEW_PBAR}
+}
+
+proc set_car() {		NEW_PBAR = $1
+	nP_CAR = NEW_PBAR
+	forall if (ismembrane("car")) {pcarbar_car = NEW_PBAR}
+}
+
+proc set_caq() {		NEW_PBAR = $1
+	nP_CAQ = NEW_PBAR
+	forall if (ismembrane("caq")) {pcarbar_caq = NEW_PBAR}
+}
+
+proc set_cat() {		NEW_PBAR = $1
+	nP_CAT = NEW_PBAR
+	forall if (ismembrane("cat")) {pcatbar_cat = NEW_PBAR}
+}
+
+//******************
+// Calcium dynamics procs
+
+proc set_cainf() {	NEW_CAINF = $1
+	nCA_INF = NEW_CAINF
+	forall if (ismembrane("cadyn")) {cainf_cadyn = CAINF}
+	forall if (ismembrane("caldyn")) {cainf_caldyn = CAINF}
+}
+
+proc set_taur() {	NEW_TAUR = $1
+	nCA_TAUR = NEW_TAUR
+	forall if (ismembrane("cadyn")) {taur_cadyn = TAUR}
+	forall if (ismembrane("caldyn")) {taur_caldyn = TAUR}
+}
+proc set_cadrive() { 	NEW_DRIVE = $1
+	nCA_DRIVE = NEW_DRIVE
+	forall if (ismembrane("cadyn")) {drive_cadyn = CA_DRIVE}
+	forall if (ismembrane("caldyn")) {drive_caldyn = CA_DRIVE}
+}
+proc set_pump() {	NEW_PUMP = $1
+	nCA_PUMP = NEW_PUMP
+	forall if (ismembrane("cadyn")) {pump_cadyn = CA_PUMP}
+	forall if (ismembrane("caldyn")) {pump_caldyn = CA_PUMP}
+}
+//******************

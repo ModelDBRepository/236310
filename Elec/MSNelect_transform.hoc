@@ -1,0 +1,97 @@
+//First, run nrnivmodl *.mod to compile the KIR channel mod file
+//Then, specify the morphology model in MSNname and mBase as the same format as the Nov3IR3a.hoc
+//Run nrngui MSNelect_transform.hoc to compute inward/outward attenuation.
+
+//load_file("nrngui.hoc")
+
+// now load morph;  recall that 'basic_shape()' resets the morphology
+strdef MSNname, mBase
+
+
+MSNname = "Nov3IR3a.hoc"
+mBase="Nov3IR3a"
+
+
+
+
+
+
+load_file(MSNname)
+
+
+objref dendritic, apical
+    dendritic = new SectionList()    
+//    forsec "dend"  {
+	forsec proximal {
+        dendritic.append()
+    }
+
+
+
+
+
+xopen("baseline_values.txt")
+xopen("all_tau_vecs.hoc")
+xopen("basic_procs.hoc")
+xopen("load_scripts.hoc")
+
+load_file("aux_procs.hoc")
+
+HALF_diam = soma.diam/2
+HALF_L = soma.L/2
+//xopen("electro_procs.hoc")
+set_pas(G_PAS)
+set_kir(G_KIR)
+
+
+
+soma printf("%s {L = %g  diam = %g}\n",secname(), L, diam)
+//forall print secname()," ",L,diam
+
+
+geom_nseg(500,0.1)
+
+
+
+xopen("MSN_fixDiams.hoc")
+//fix the morphology, let each dendrite with diameter<0.5 to 0.5µm
+
+  xopen("measureMeanAtten.hoc")
+  soma {
+    nseg = 1
+    soma_ref=new SectionRef()
+  }
+
+
+// {printf("File:  %s\n",MSNname)}
+//{printf("File:  %s\n",MSNname)}
+//{printf("%s_out = [",MSNname)}
+//{printf("\nOutward Atten, dendritic\n")}
+  meanOutwardAttenuationAllFrequencies(soma_ref,dendritic)
+// compute mean outward attenuation
+
+//{printf("];\n\n%s_in = [",MSNname)}
+//{printf("\n\nInward Atten, dendritic\n")}
+  meanInwardAttenuationAllFrequencies(soma_ref,dendritic)
+// compute mean inward attenuation
+
+{printf("];\n")}
+
+/***
+objref Mylist
+forsec proximal { 
+	x { 
+	print secname()
+	Mylist = new SectionList()
+	Mylist.subtree()
+	meanOutAttenAllFreqs_SecList(soma_ref,Mylist)
+	dendriticLen = 0
+	
+	forsec Mylist {
+		dendriticLen=dendriticLen + L
+	}
+	printf(" %g\n", dendriticLen)
+}
+}
+***/
+// This is a subroutine to compute the outward attenuation along each primary dendritic tree. 
